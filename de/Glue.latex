@@ -1,0 +1,192 @@
+\documentclass[11pt,german]{scrbook}
+
+\usepackage[linedheaders,parts,manychapters]{classicthesis}
+\usepackage{microtype}
+\usepackage[a4paper]{geometry}
+\geometry{verbose}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{color}
+
+\usepackage{polyglossia}
+\usepackage{url}
+\usepackage{makeidx}
+\makeindex
+\usepackage{graphicx}
+\usepackage{csquotes}
+\usepackage{longtable}
+
+\usepackage{wrapfig}
+\usepackage[format=plain,font=small]{caption}
+\usepackage{fontspec}
+
+% Standardsprache ist Deutsch in der Rechtschreibung von 1996
+\setdefaultlanguage[spelling=new]{german}
+
+% TeX-Gyre-Variante von Palatino mit Minuskelziffern und den TeX-Ligaturen einschalten
+\setmainfont[Numbers=OldStyle,Ligatures=TeX]{TeX Gyre Pagella}
+
+% classicthesis lädt bereits natbib
+$if(biblatex)$
+% Der Stil "authortitle" zitiert als Fußnote.
+\usepackage[natbib=true,backend=biber,style=authortitle]{biblatex}
+\bibliography{Referenzen.bib}
+$endif$
+
+% Farben definieren: Hellblau.
+% Das kann jeder gut lesen und es stört nicht.
+% Dunkelblau sind die Ränder.
+\usepackage{color}
+\definecolor{lightblue}{rgb}{0.95,0.95,1.0}
+\definecolor{darkblue}{rgb}{0.3,0.3,0.8}
+% classicthesis lädt bereits hyperref
+%\usepackage[unicode=true,bookmarks=true,bookmarksnumbered=true,bookmarksopen=true,b%ookmarksopenlevel=1,breaklinks=true,pdfborder={0 0 %0},backref=false,colorlinks=true]{hyperref}
+
+% anstatt serifenloser Schrift möchte ich bitte Serifen sehen
+\renewcommand{\sfdefault}{\rmdefault}
+
+% Einstellungen, um überfüllte HKästen zu vermeiden. So l2tabu entnommen.
+\tolerance 1414
+\hbadness 1414
+\emergencystretch 1.5em
+\hfuzz 0.3pt
+\widowpenalty=10000
+\vfuzz \hfuzz
+\raggedbottom
+
+% URLs und Pfade bitte nicht in Schreibmaschinenschrift malen, sondern kursiv.
+\renewcommand{\UrlFont}{\it}
+\renewcommand{\path}{\url}
+
+\usepackage{marvosym}  % for \LeftTorque
+
+\urlstyle{same}  % don't use monospace font for urls
+$if(links-as-notes)$
+% Make links footnotes instead of hotlinks:
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$
+
+\usepackage{listings}
+% Listings einigermaßen ansehnlich gestalten:
+% - hellblau hinterlegen und dunkelblauen Linien zum Abgrenzen
+% - Schreibmaschinenschrift
+% - lange Zeilen umbrechen und einen roten gebogenen Pfeil an den Beginn der neuen Zeile
+\lstset{frame=lines,
+  backgroundcolor=\color{lightblue},
+  rulecolor=\color{darkblue},
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{\LeftTorque}\space}}
+
+
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
+$if(title)$
+\title{$title$$if(subtitle)$\\\vspace{0.5em}{\large $subtitle$}$endif$}
+$endif$
+$if(author)$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$endif$
+\date{$date$}
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+\hypersetup{colorlinks=true,linkcolor=darkblue,citecolor=darkblue,urlcolor=darkblue,unicode=true}
+\begin{document}
+$if(title)$
+\maketitle
+$endif$
+\frontmatter
+\thispagestyle{empty}
+\begin{titlepage}
+\pdfbookmark[1]{Titel}{titel}
+\begin{center}
+\large
+\hfill % das hfill ist wichtig, da sonst nicht vertikal zentriert wird
+\vfil
+  \begingroup
+    %\color{darkblue}
+    \spacedallcaps{OTRS-Toolbox}\\
+    \spacedallcaps{Das Entwickler-Handbuch}\\ \medskip
+  \emph{Renée Bäcker, Gregor Goldbach}
+  \endgroup
+\end{center}
+\vfill
+\cleardoublepage
+\thispagestyle{empty}
+\begin{center}
+\Large
+\hfill % das hfill ist wichtig, da sonst nicht vertikal zentriert wird
+\vfil
+  \spacedlowsmallcaps{Renée Bäcker, Gregor Goldbach}\\ \medskip
+  \begingroup
+    \color{darkblue}
+    \spacedallcaps{OTRS-Toolbox}\\ \medskip
+    \spacedallcaps{Das Entwickler-Handbuch}
+  \endgroup
+  \vfill
+\begin{flushright}
+\emph{Lesebuch und Nachschlagewerk\\zur Entwicklung\\der OTRS-Toolbox}
+\end{flushright}
+\end{center}
+\end{titlepage}
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$for(include-before)$
+$include-before$
+
+$endfor$
+
+$if(toc)$
+{
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+}
+$endif$
+$if(lot)$
+\listoftables
+$endif$
+$if(lof)$
+\listoffigures
+$endif$
+
+% Diesen Befehl baut pandoc ein, wenn der Autor Auflistungen mit
+% Spiegelstrichen bastelt
+% https://tex.stackexchange.com/questions/257418/error-tightlist-converting-md-file-into-pdf-using-pandoc
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\mainmatter
+
+$body$
+
+$if(natbib)$
+$if(biblio-files)$
+$if(biblio-title)$
+$if(book-class)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+\bibliography{$biblio-files$}
+
+$endif$
+$endif$
+$if(biblatex)$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+$endif$
+$for(include-after)$
+$include-after$
+$endfor$
+
+\printindex
+\end{document}
